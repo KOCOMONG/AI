@@ -10,38 +10,48 @@ class Diet:
         '''
 
         self.model = joblib.load('다이어트.pkl')
-        self.label=pd.read_csv('음식라벨인코더.csv')
+        self.label = pd.read_csv('음식라벨인코더.csv')
        
-    def input(self):
+    def input(self,height,weight,age,sex,want_weight,want_time,practice):
         '''
             include() : 입력값 세팅
-        '''
-        print("키 / 몸무게 / 나이 / 성별(0:남 1:여) / 목표체중 / 목표기간 / 평소 활동량 (1~5) ")
+                        키 / 몸무게 / 나이 / 성별(0:남 1:여) / 목표체중 / 목표기간 / 평소 활동량 (1~5) 
         
-        self.h,self.w,self.a,self.s,self.w_w,self.w_t,self.p=map(int,input().split())
+        '''
+        
+        self.data_dic={}
 
-       
+        self.data_dic['height']= height
+        self.data_dic['weight'] = weight
+        self.data_dic['age'] = age
+        self.data_dic['sex'] = sex
+        self.data_dic['want_weight'] = want_weight
+        self.data_dic['want_time'] = want_time
+        self.data_dic['practice'] = practice
 
     def rec(self):
-        
-        self.input()
+        '''
+            rec() :
+                1. 목표체중(w_w), 목표기간(w_t) => 일 목표 소모 열량 (m_cal) 생성
+                2. 비만도 측정, 분류
+                3. 기초대사량 측정
+                4. 하루 필요 열량 분석
+                5. 총 열량, 탄,단,지 구하기
+                6. 모델 예측
+                7. 결과
+        '''
 
+        #1. 목표체중(w_w), 목표기간(w_t) => 일 목표 소모 열량 (m_cal) 생성
         m_w=self.w-self.w_w
         cal=m_w*7200
         m_cal=round(cal/self.w_t,2)
 
-        print(m_cal)
-
-        '''
-        목표체중 : w_w
-        목표기간 : w_t
-        일 목표소모 열량 : m_cal
-        '''
-        #비만도 측정
+       
+        #2. 비만도 측정
+        
         ob = round(self.w/((self.h/100)*(self.h/100)),1)
 
         #비만도 분류
-
         if ob < 18.5:
             ca_ob = "저체중"
         elif ob < 23:
@@ -55,9 +65,8 @@ class Diet:
         else:
             ca_ob = "3단계 비만 (고도비만)" 
 
-        print(ca_ob)
-
-        #기초대사량 측정
+            
+        #3. 기초대사량 측정
 
         if self.s==0: #남
             BMR = 66.47 + (13.75 * self.w) + (5 * self.h) - (6.76 * self.a)
@@ -71,7 +80,8 @@ class Diet:
         #식사
         f_dcal=round(m_cal*0.5,2)
 
-        #하루 필요 열량
+        #4. 하루 필요 열량
+        
         if self.p==1:
             d_cal = BMR * 1.2
         elif self.p==2:
@@ -84,11 +94,15 @@ class Diet:
             d_cal = BMR * 1.9
 
         '''
+        
         _ 님이 w_t일간 m_w kg을 줄이기 위해서는
         매일 운동으로 p_dcal kcal 를 소모해야하고,
         식사는 하루 ( d_cal - f_dcal ) kcal 를 드시면 됩니다.
+
         '''
-        #하루 칼로리 
+
+        #5. 총 열량, 탄,단,지 
+        
         today_cal=(d_cal - f_dcal)*0.4
         
         self.cal = today_cal
@@ -105,14 +119,12 @@ class Diet:
 
         test=pd.DataFrame([test])
         
-        print(test.iloc[0])
-
+        #6. 모델예측
+        
         y=self.model.predict(test.iloc[0])
 
+        #7. 결과
+        
         self.result = self.label['음식'][np.where(self.label['label'] == y[0])[0][0]]
 
-        print(self.result)
-
-if __name__ == "__main__":
-    Dietrec=Diet()
-    Dietrec.rec()
+        
