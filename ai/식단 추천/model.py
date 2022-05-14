@@ -119,7 +119,7 @@ class Diet:
         test=pd.DataFrame([test])
         
         #6. 모델예측
-        y=self.model.predict(test.iloc[0])
+        y=self.model.predict([test.iloc[0]])
 
         #7. 결과
         self.result = self.label['음식'][np.where(self.label['label'] == y[0])[0][0]]
