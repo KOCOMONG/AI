@@ -70,7 +70,7 @@ class Diet:
         #3. 기초대사량 측정
 
         if self.data_dic['sex']==0: #남
-            BMR = 66.47 + (13.75 * self.data_dic['weight']) + (5 * self.data_dic['height']) - (6.76 * self.self.data_dic['age'])
+            BMR = 66.47 + (13.75 * self.data_dic['weight']) + (5 * self.data_dic['height']) - (6.76 * self.data_dic['age'])
         else: #여
             BMR = 655.1 + (9.56 * self.data_dic['weight']) + (1.85 * self.data_dic['height']) - (4.68 * self.data_dic['age'])
             BMR = round(BMR,1)
