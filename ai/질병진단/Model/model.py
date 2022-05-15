@@ -20,21 +20,25 @@ class disease_diagnose:
         __init__() : 초기화 함수
                     필요한 모델 불러오기
         '''
-        with open('men_model_v2_2.h5', 'rb') as handle:
+        with open('men_model_l2_.h5', 'rb') as handle:
           self.m_loaded_model = pickle.load(handle)
-        with open('women_model_v2_2.pickle', 'rb') as handle:
+
+        with open('women_model_l2_.pickle', 'rb') as handle:
           self.w_loaded_model = pickle.load(handle)
         
-        with open('men_tokenizer_v2_2.pickle', 'rb') as handle:
+        with open('men_tokenizer_l2_.pickle', 'rb') as handle:
           self.m_tokenizer = pickle.load(handle)
-        with open('women_tokenizer_v2_2.pickle', 'rb') as handle:
+
+        with open('women_tokenizer_l2_.pickle', 'rb') as handle:
           self.w_tokenizer = pickle.load(handle)
 
-        with open("men_diseases_v2_2.txt", "rb") as fp:
+        with open("men_diseases_l2_.txt", "rb") as fp:
           self.m_disease_codes = pickle.load(fp)
-        with open("women_diseases_v2_2.txt", "rb") as fp:
+
+        with open("women_diseases_l2_.txt", "rb") as fp:
           self.w_disease_codes = pickle.load(fp)
-            
+
+                    
 
     def input(self,height,weight,age,sex,cheifcomplaint,onset,location,duration,course,experience,character,factor,associated,event,drug,social,family,traumatic,past,feminity,obesity):
         '''
@@ -74,12 +78,12 @@ class disease_diagnose:
           self.model = self.w_loaded_model
           self.tokenizer = self.w_tokenizer
           self.disease_codes = self.w_disease_codes
-          self.max_len=176
+          self.max_len=163
         else:
           self.model = self.m_loaded_model 
           self.tokenizer = self.m_tokenizer 
           self.disease_codes = self.m_disease_codes   
-          self.max_len=176 
+          self.max_len=163
         
 
 
@@ -238,7 +242,7 @@ class disease_diagnose:
                               self.data_dic['event'].values + '. ' + self.data_dic['drug'].values + '. ' +
                               self.data_dic['social'] .values + '. ' + self.data_dic['family'] .values + '. ' +
                               self.data_dic['traumatic'].values + '. ' + self.data_dic['past'].values + '. ' +
-                              self.data_dic['feminity'].values + '. ' + self.data_dic['obesiyy'].values)
+                              self.data_dic['feminity'].values + '. ' + self.data_dic['obesity'].values)
         
         # Change NRS to text
         self.data_dic['All'] = NRS_to_text(self.data_dic['All'].values[0])
@@ -319,4 +323,3 @@ class disease_diagnose:
         y_prob = self.model.predict(data_sequence)
 
         self.result = self.get_result(y_prob)
-
