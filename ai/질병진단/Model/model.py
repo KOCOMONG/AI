@@ -40,14 +40,17 @@ class disease_diagnose:
 
                     
 
-    def input(self,height,weight,age,sex,cheifcomplaint,onset,location,duration,course,experience,character,factor,associated,event,drug,social,family,traumatic,past,feminity,obesity):
+    def input(self,level2,height,weight,age,sex,cheifcomplaint,onset,location,duration,course,experience,character,factor,associated,event,drug,social,family,traumatic,past,feminity,obesity):
         '''
         기초문진 및 진단 내용
         남녀 모델 분리
+
+        level2 - 주요 증상 추가
         '''
 
         self.data_dic={}
 
+        self.data_dic['level2']= level2
         self.data_dic['height']= height
         self.data_dic['weight'] = weight
         self.data_dic['age'] = age
