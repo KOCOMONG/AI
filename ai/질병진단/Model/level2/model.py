@@ -20,22 +20,22 @@ class lv2_disease_diagnose:
         __init__() : 초기화 함수
                     필요한 모델 불러오기
         '''
-        with open('level2/m_level2_estimator.pkl', 'rb') as b:
+        with open('m_level2_estimator.pkl', 'rb') as b:
             self.m_lv2_model = pickle.load(b)
 
-        with open('level2/m_level2_tfidf_vectorizer.pkl', 'rb') as c:
+        with open('/m_level2_tfidf_vectorizer.pkl', 'rb') as c:
             self.m_tfidf = pickle.load(c)
 
-        with open('level2/m_level2_dummies.txt', 'rb') as d:
+        with open('m_level2_dummies.txt', 'rb') as d:
             self.m_lv2_dummies = pickle.load(d)
 
-        with open('level2/w_level2_estimator.pkl', 'rb') as b:
+        with open('w_level2_estimator.pkl', 'rb') as b:
             self.w_lv2_model = pickle.load(b)
 
-        with open('level2/w_level2_tfidf_vectorizer.pkl', 'rb') as c:
+        with open(w_level2_tfidf_vectorizer.pkl', 'rb') as c:
             self.w_tfidf = pickle.load(c)
 
-        with open('level2/w_level2_dummies.txt', 'rb') as d:
+        with open('w_level2_dummies.txt', 'rb') as d:
             self.w_lv2_dummies = pickle.load(d)
       
     def input(self,sex,cheifcomplaint,onset,location):
