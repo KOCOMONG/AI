@@ -20,22 +20,22 @@ class disease_diagnose:
         __init__() : 초기화 함수
                     필요한 모델 불러오기
         '''
-        with open('men_model_l2_.h5', 'rb') as handle:
+        with open('cpu_v/men_model_lv2_cpu.h5', 'rb') as handle:
           self.m_loaded_model = pickle.load(handle)
 
-        with open('women_model_l2_.pickle', 'rb') as handle:
+        with open('cpu_v/women_model_lv2_cpu.h5', 'rb') as handle:
           self.w_loaded_model = pickle.load(handle)
         
-        with open('men_tokenizer_l2_.pickle', 'rb') as handle:
+        with open('cpu_v/men_tokenizer_lv2_cpu.pickle', 'rb') as handle:
           self.m_tokenizer = pickle.load(handle)
 
-        with open('women_tokenizer_l2_.pickle', 'rb') as handle:
+        with open('cpu_v/women_tokenizer_lv2_cpu.pickle', 'rb') as handle:
           self.w_tokenizer = pickle.load(handle)
 
-        with open("men_diseases_l2_.txt", "rb") as fp:
+        with open("cpu_v/men_diseases_lv2_cpu.txt", "rb") as fp:
           self.m_disease_codes = pickle.load(fp)
 
-        with open("women_diseases_l2_.txt", "rb") as fp:
+        with open("cpu_v/women_diseases_lv2_cpu.txt", "rb") as fp:
           self.w_disease_codes = pickle.load(fp)
 
                     
@@ -44,7 +44,6 @@ class disease_diagnose:
         '''
         기초문진 및 진단 내용
         남녀 모델 분리
-
         level2 - 주요 증상 추가
         '''
 
