@@ -20,26 +20,29 @@ class disease_diagnose:
         __init__() : 초기화 함수
                     필요한 모델 불러오기
         '''
-        
-        with open('./disease/men_tokenizer.pickle', 'rb') as handle:
+        DATA_PATH='C:/Users/82102/OneDrive/문서/Capstone_AI/AI/ai/질병진단/Model/'
+
+        with open(DATA_PATH+'men_tokenizer.pickle', 'rb') as handle:
             self.m_tokenizer = pickle.load(handle)
 
-        with open('./disease/women_tokenizer.pickle', 'rb') as handle:
+        with open(DATA_PATH+'women_tokenizer.pickle', 'rb') as handle:
             self.w_tokenizer = pickle.load(handle)
 
-        with open("./disease/men_diseases.txt", "rb") as fp:
+        with open(DATA_PATH+"men_diseases.txt", "rb") as fp:
             self.m_disease_codes = pickle.load(fp)
 
-        with open("./disease/women_diseases.txt", "rb") as fp:
+        with open(DATA_PATH+"women_diseases.txt", "rb") as fp:
             self.w_disease_codes = pickle.load(fp)
 
-        self.m_loaded_model = tf.saved_model.load('./model/m_model')
-        self.w_loaded_model = tf.saved_model.load('./model/w_model')
+        self.m_loaded_model = tf.saved_model.load(DATA_PATH+'m_model')
+        
+
+        self.w_loaded_model = tf.saved_model.load(DATA_PATH+'w_model')
 
 
     
 
-    def input(self,level2,height,weight,age,sex,cheifcomplaint,onset,location,duration,course,experience,character,factor,associated,event,drug,social,family,traumatic,past,feminity,obesity):
+    def input(self,level2,height,weight,age,sex,cheifcomplaint,onset,location,duration,course,experience,character,factor,associated,event,drug,social,family,traumatic,past,feminity):
         '''
         기초문진 및 진단 내용
         남녀 모델 분리
@@ -49,9 +52,9 @@ class disease_diagnose:
         self.data_dic={}
 
         self.data_dic['level2']= level2
-        self.data_dic['height']= height
-        self.data_dic['weight'] = weight
-        self.data_dic['age'] = age
+        self.data_dic['height']= str(height)
+        self.data_dic['weight'] = str(weight)
+        self.data_dic['age'] = str(age)
         self.data_dic['sex'] = sex
         self.data_dic['cheifcomplaint'] = cheifcomplaint
         self.data_dic['onset'] = onset
@@ -69,13 +72,38 @@ class disease_diagnose:
         self.data_dic['traumatic'] = traumatic
         self.data_dic['past'] = past
         self.data_dic['feminity'] = feminity
-        self.data_dic['obesity'] = obesity
 
-        #데이터프레임 변환
-        self.input_data = pd.DataFrame([self.data_dic])        
+        test_df = {
+                'level2': level2,
+                'height' : height,
+                'weight': weight,
+                'age': age,
+                'sex': sex,
+                'cheifcomplaint': cheifcomplaint,
+                'onset': onset,
+                'location': location,
+                'duration' : duration,
+                'course': course,
+                'experience' : experience,
+                'character': character,
+                'associated': associated,
+                'factor': factor,
+                'event': event,
+                'drug': drug,
+                'social': social,
+                'family': family,
+                'traumatic': traumatic,
+                'past': past,
+                'feminity': feminity
+                }
+
+        self.data_dic = pd.DataFrame([test_df])
+
+        #데이터프레임 변환     
+        self.input_data = self.data_dic
 
         #남,녀 모델 분리
-        if self.data_dic['sex'] =='여자':
+        if self.data_dic['sex'].values =='여자':
             self.model = self.w_loaded_model
             self.tokenizer = self.w_tokenizer
             self.disease_codes = self.w_disease_codes
@@ -85,6 +113,8 @@ class disease_diagnose:
             self.tokenizer = self.m_tokenizer 
             self.disease_codes = self.m_disease_codes   
             self.max_len=163
+        
+
         
 
 
@@ -125,7 +155,7 @@ class disease_diagnose:
                         '학년','사람','직장인','나이','키','몸무게','엄마','부탁','해석','혹','시가'
                         '의', '가', '이', '은', '들', '는', '잘', '걍', '과', '도', '을'
                         '를', '으로', '자', '에', '와', '하다', '다', '.', ',']
-            temp_x = Okt.morphs(text, stem=True)
+            temp_x = Okt().morphs(text, stem=True)
             temp_x = [word for word in temp_x if not word in stopwords]
             temp_x = re.findall(r'\w+', str(temp_x))
             temp_x = ' '.join(map(str, temp_x))
@@ -213,25 +243,35 @@ class disease_diagnose:
             return ' '.join(re.findall(r'\w+', str(x)))
 
         # Handle Nan values 
-        data = self.data.fillna('-')
+        self.data = self.data.fillna('-')
 
-        for i in range(len(data.columns)):
-            data[data.columns[i]] = data.apply(lambda x : to_nan(x[data.columns[i]]) , axis = 1 )
+        for i in range(len(self.data.columns)):
+            self.data[self.data.columns[i]] = self.data.apply(lambda x : to_nan(x[self.data.columns[i]]) , axis = 1 )
 
         # Define obesity by calculating BMI with Height and Weight
         self.data_dic['height'] = self.data_dic['height'].replace('', '0')
-        self.data_dic['height'] = self.data_dic['height'].replace('', '0')
+        self.data_dic['weight'] = self.data_dic['weight'].replace('', '0')
+
+        #self.data_dic['height'] = float(self.data_dic['height'])
+        #self.data_dic['weight'] = float(self.data_dic['weight'])
+
+        #print(self.data_dic['weight'].dtype)
 
         self.data_dic['height'] = self.data_dic['height'].astype('int')
-        self.data_dic['height'] = self.data_dic['height'].astype('int')
+        self.data_dic['weight'] = self.data_dic['weight'].astype('int')
 
-        self.data_dic['BMI'] = self.data_dic['weight']/ (self.data_dic['height']/100)**2
+        self.data_dic['BMI'] = (self.data_dic['weight'] / (self.data_dic['height']/100)**2)
         self.data_dic['BMI'].fillna(-1, inplace=True)
-        self.data_dic['BMI'] = define_obesity(self.data_dic['BMI'].values)
+        self.data_dic['obesity'] = define_obesity(self.data_dic['BMI'].values)
             
 
         # Change Age to Groups of AgeX(-> Since we are going to receive their age as a group_format)
         self.data_dic['age'] = self.data_dic['age'].astype(str)
+        self.data_dic['height'] = self.data_dic['height'].astype(str)
+        self.data_dic['weight'] = self.data_dic['weight'].astype(str)
+        self.data_dic['BMI'] = self.data_dic['BMI'].astype(str)
+        self.data_dic['obesity'] = self.data_dic['obesity'].astype(str)
+
 
         #7. 문장 생성
         self.data_dic['All'] = (self.data_dic['cheifcomplaint'].values +'. '+ self.data_dic['age'].values + '. '+
@@ -243,8 +283,10 @@ class disease_diagnose:
                                 self.data_dic['event'].values + '. ' + self.data_dic['drug'].values + '. ' +
                                 self.data_dic['social'] .values + '. ' + self.data_dic['family'] .values + '. ' +
                                 self.data_dic['traumatic'].values + '. ' + self.data_dic['past'].values + '. ' +
-                                self.data_dic['feminity'].values + '. ' + self.data_dic['obesity'].values)
+                                self.data_dic['feminity'].values + '. ' + self.data_dic['BMI'].values + '. ' + self.data_dic['obesity'].values)
         
+        #print(self.data_dic['All'])
+
         # Change NRS to text
         self.data_dic['All'] = NRS_to_text(self.data_dic['All'].values[0])
 
@@ -254,18 +296,24 @@ class disease_diagnose:
         # Erase stopwords using konlpy
         self.data_dic['All'] = erase_stopwords(self.data_dic['All'].values[0])
 
-        data['All'] = only_letters_num(self.data_dic['All'].values)
+        self.data['All'] = only_letters_num(self.data_dic['All'].values[0])
+
+        #print(self.data['All'])
+
         document_bert_data = ["[CLS] " + str(s) + " [SEP]" for s in self.data_dic['All'].values]
+
+        #print(document_bert_data)
 
         #8. 토크나이저 생성
         tokenizer_funnel = FunnelTokenizerFast.from_pretrained("kykim/funnel-kor-base")
         
         ko_tokenized_texts_data = [tokenizer_funnel.tokenize(s) for s in document_bert_data]
         data_sequence = self.tokenizer.texts_to_sequences(ko_tokenized_texts_data)
-        data_sequence = pad_sequences(data_sequence, maxlen = self.max_len).reshape(1,-1)
+
+        #print("data_sequence : ", data_sequence)
+
+        self.sequence = pad_sequences(data_sequence, maxlen = self.max_len).reshape(1,-1)
         
-        
-        return data_sequence
 
     
     def get_result(self,y_prob):
@@ -284,7 +332,7 @@ class disease_diagnose:
         third_pred_disease_name = self.disease_codes[third[0]]
 
         def load_disease_list():
-            List_of_Disease = pd.read_csv('Disease_info.csv')
+            List_of_Disease = pd.read_csv('C:/Users/82102/OneDrive/문서/Capstone_AI/AI/ai/질병진단/DATA/Disease_info.csv')
             return List_of_Disease
 
         ## 질병 목록 ##
@@ -311,16 +359,18 @@ class disease_diagnose:
                     '진료과: ', third_info['진료과'].values[0]+'\n',
                     '질병 설명:', third_info['정의'].values[0]
             }
-            
+        
         return result1, result2, result3
 
-    def model(self):
+    def run_model(self):
         '''
         모델예측
         self.result = 결과
         '''
 
-        data_sequence = self.preprocess(self.input_data)
-        y_prob = self.model(data_sequence)
+        self.preprocess()
 
-        self.result = self.get_result(y_prob)
+        y_prob = self.model(self.sequence)
+
+        result = self.get_result(y_prob)
+
