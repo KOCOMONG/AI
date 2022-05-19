@@ -37,7 +37,7 @@ class lv2_disease_diagnose:
         with open(DATA_PATH+'w_level2_dummies.txt', 'rb') as d:
             self.w_lv2_dummies = pickle.load(d)
       
-    def input(self,height,weight,age,sex,cheifcomplaint,onset,location):
+    def input(self,sex,cheifcomplaint,onset,location):
         '''
         기초문진 및 진단 내용
         남녀 모델 분리
@@ -46,18 +46,13 @@ class lv2_disease_diagnose:
         self.data_dic={}
         
         #성별, 환자 주요 호소 증상, 증상 발생 시점, 증상 발생 위치
-        self.data_dic['height'] = str(height)
-        self.data_dic['weight'] = str(weight)
-        self.data_dic['age'] = str(age)
+
         self.data_dic['sex'] = str(sex)
         self.data_dic['cheifcomplaint'] = cheifcomplaint
         self.data_dic['onset'] = onset
         self.data_dic['location'] = location
 
         test_df = {
-                'height' : height,
-                'weight': weight,
-                'age': age,
                 'sex': str(sex),
                 'cheifcomplaint': cheifcomplaint,
                 'onset': onset,
