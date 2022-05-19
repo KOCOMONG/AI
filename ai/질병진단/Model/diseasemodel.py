@@ -107,12 +107,12 @@ class disease_diagnose:
             self.model = self.w_loaded_model
             self.tokenizer = self.w_tokenizer
             self.disease_codes = self.w_disease_codes
-            self.max_len=163
+            self.max_len=193
         else:
             self.model = self.m_loaded_model 
             self.tokenizer = self.m_tokenizer 
             self.disease_codes = self.m_disease_codes   
-            self.max_len=163
+            self.max_len=193
         
 
         
@@ -327,9 +327,9 @@ class disease_diagnose:
         second = top_k_result[1][0][1], top_k_result.values.numpy()[0][1]
         third = top_k_result[1][0][2], top_k_result.values.numpy()[0][2]
 
-        first_pred_disease_name = self.disease_codes[first[0]]
-        second_pred_disease_name = self.disease_codes[second[0]]
-        third_pred_disease_name = self.disease_codes[third[0]]
+        first_pred_disease_name = self.disease_codes[int(first[0])]
+        second_pred_disease_name = self.disease_codes[int(second[0])]
+        third_pred_disease_name = self.disease_codes[int(third[0])]
 
         def load_disease_list():
             List_of_Disease = pd.read_csv('C:/Users/82102/OneDrive/문서/Capstone_AI/AI/ai/질병진단/DATA/Disease_info.csv')
@@ -360,7 +360,7 @@ class disease_diagnose:
                     '질병 설명:', third_info['정의'].values[0]
             }
         
-        return result1, result2, result3
+        return result1,result2,result3
 
     def run_model(self):
         '''
@@ -372,5 +372,5 @@ class disease_diagnose:
 
         y_prob = self.model(self.sequence)
 
-        result = self.get_result(y_prob)
+        result1,result2,result3 = self.get_result(y_prob)
 
