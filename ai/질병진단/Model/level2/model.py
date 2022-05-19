@@ -58,7 +58,7 @@ class lv2_disease_diagnose:
                 'height' : height,
                 'weight': weight,
                 'age': age,
-                'sex': sex,
+                'sex': str(sex),
                 'cheifcomplaint': cheifcomplaint,
                 'onset': onset,
                 'location': location,
