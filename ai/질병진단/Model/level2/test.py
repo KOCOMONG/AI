@@ -10,17 +10,13 @@ def test_lv2_diseaseclass():
     ,family,traumatic,past,feminity
     
     '''
-    height=180
-    weight=75
-    age=30
     sex=0
     cheifcomplaint="배가아파요"
     onset="1일 전"
     location="명치 부위"
     
-
     lv2_diseaseprogram=lv2_disease_diagnose()
-    lv2_diseaseprogram.input(height,weight,age,sex,cheifcomplaint,onset,location)
+    lv2_diseaseprogram.input(sex,cheifcomplaint,onset,location)
     lv2_diseaseprogram.run_model()
 
     
