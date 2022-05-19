@@ -13,7 +13,7 @@ def test_lv2_diseaseclass():
     height=180
     weight=75
     age=30
-    sex="남"
+    sex=0
     cheifcomplaint="배가아파요"
     onset="1일 전"
     location="명치 부위"
