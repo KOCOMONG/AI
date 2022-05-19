@@ -7,8 +7,6 @@ from hanspell import spell_checker
 import numpy as numpy
 import re
 import pandas as pd
-!pip install transformers
-!pip install konlpy
 from transformers import FunnelTokenizerFast, FunnelModel
 from konlpy.tag import Okt
 import pickle
@@ -20,25 +18,26 @@ class lv2_disease_diagnose:
         __init__() : 초기화 함수
                     필요한 모델 불러오기
         '''
-        with open('m_level2_estimator.pkl', 'rb') as b:
+        DATA_PATH = 'C:/Users/82102/OneDrive/문서/Capstone_AI/AI/ai/질병진단/Model/level2/'
+        with open(DATA_PATH + 'm_level2_estimator.pkl', 'rb') as b:
             self.m_lv2_model = pickle.load(b)
 
-        with open('/m_level2_tfidf_vectorizer.pkl', 'rb') as c:
+        with open(DATA_PATH +'/m_level2_tfidf_vectorizer.pkl', 'rb') as c:
             self.m_tfidf = pickle.load(c)
 
-        with open('m_level2_dummies.txt', 'rb') as d:
+        with open(DATA_PATH+'m_level2_dummies.txt', 'rb') as d:
             self.m_lv2_dummies = pickle.load(d)
 
-        with open('w_level2_estimator.pkl', 'rb') as b:
+        with open(DATA_PATH+'w_level2_estimator.pkl', 'rb') as b:
             self.w_lv2_model = pickle.load(b)
 
-        with open(w_level2_tfidf_vectorizer.pkl', 'rb') as c:
+        with open(DATA_PATH+'w_level2_tfidf_vectorizer.pkl', 'rb') as c:
             self.w_tfidf = pickle.load(c)
 
-        with open('w_level2_dummies.txt', 'rb') as d:
+        with open(DATA_PATH+'w_level2_dummies.txt', 'rb') as d:
             self.w_lv2_dummies = pickle.load(d)
       
-    def input(self,sex,cheifcomplaint,onset,location):
+    def input(self,height,weight,age,sex,cheifcomplaint,onset,location):
         '''
         기초문진 및 진단 내용
         남녀 모델 분리
@@ -47,17 +46,29 @@ class lv2_disease_diagnose:
         self.data_dic={}
         
         #성별, 환자 주요 호소 증상, 증상 발생 시점, 증상 발생 위치
-        
+        self.data_dic['height'] = str(height)
+        self.data_dic['weight'] = str(weight)
+        self.data_dic['age'] = str(age)
         self.data_dic['sex'] = sex
         self.data_dic['cheifcomplaint'] = cheifcomplaint
         self.data_dic['onset'] = onset
         self.data_dic['location'] = location
 
+        test_df = {
+                'height' : height,
+                'weight': weight,
+                'age': age,
+                'sex': sex,
+                'cheifcomplaint': cheifcomplaint,
+                'onset': onset,
+                'location': location,
+        }
         #데이터프레임 변환
-        self.input_data = pd.DataFrame([self.data_dic])        
+        self.data_dic = pd.DataFrame([test_df])
+        self.input_data = self.data_dic
 
         #남,녀 모델 분리
-        if self.data_dic['Sex'][0]=='여자':
+        if self.data_dic['sex'][0]=='여자':
             self.lv2_model = self.w_lv2_model
             self.tfidf = self.w_tfidf
             self.lv2_dummies = self.w_lv2_dummies
@@ -91,7 +102,7 @@ class lv2_disease_diagnose:
                       '학년','사람','직장인','나이','키','몸무게','엄마','부탁','해석','혹','시가'
                       '의', '가', '이', '은', '들', '는', '잘', '걍', '과', '도', '을'
                       '를', '으로', '자', '에', '와', '하다', '다', '.', ',']
-            temp_x = Okt.morphs(text, stem=True)
+            temp_x = Okt().morphs(text, stem=True)
             temp_x = [word for word in temp_x if not word in stopwords]
             temp_x = re.findall(r'\w+', str(temp_x))
             temp_x = ' '.join(map(str, temp_x))
@@ -127,7 +138,7 @@ class lv2_disease_diagnose:
         for i in range(len(test.columns)):
             test[test.columns[i]] = test.apply(lambda x : to_nan(x[test.columns[i]]) , axis = 1 )
         
-        test['All'] =  test['Chief complaint'] + '. ' + test['Onset'] + '. ' + test['Location']
+        test['All'] =  test['cheifcomplaint'] + '. ' + test['onset'] + '. ' + test['location']
 
         test['All'] = test.apply(lambda x : erase_stopwords(x['All']) , axis = 1 )
 
@@ -136,7 +147,7 @@ class lv2_disease_diagnose:
         return test_
         
 
-    def model(self):
+    def run_model(self):
         '''
         모델 로드
         결과 출력 (Top 3) -> 레벨 2 (주요 증상 27가지 중 Top3) 결과 예측 (result_1, result_2, result_3)
@@ -161,6 +172,8 @@ class lv2_disease_diagnose:
         self.result_1 = lv2_1
         self.result_2 = lv2_2
         self.result_3 = lv2_3
+
+        print(self.result_1,self.result_2,self.result_3)
 
 
         
