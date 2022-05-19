@@ -55,7 +55,7 @@ class disease_diagnose:
         self.data_dic['height']= str(height)
         self.data_dic['weight'] = str(weight)
         self.data_dic['age'] = str(age)
-        self.data_dic['sex'] = sex
+        self.data_dic['sex'] = str(sex)
         self.data_dic['cheifcomplaint'] = cheifcomplaint
         self.data_dic['onset'] = onset
         self.data_dic['location'] = location
@@ -78,7 +78,7 @@ class disease_diagnose:
                 'height' : height,
                 'weight': weight,
                 'age': age,
-                'sex': sex,
+                'sex': str(sex),
                 'cheifcomplaint': cheifcomplaint,
                 'onset': onset,
                 'location': location,
@@ -103,7 +103,8 @@ class disease_diagnose:
         self.input_data = self.data_dic
 
         #남,녀 모델 분리
-        if self.data_dic['sex'].values =='여자':
+        #남자 0 여자 1
+        if self.data_dic['sex'].values == '1':
             self.model = self.w_loaded_model
             self.tokenizer = self.w_tokenizer
             self.disease_codes = self.w_disease_codes
@@ -271,6 +272,11 @@ class disease_diagnose:
         self.data_dic['weight'] = self.data_dic['weight'].astype(str)
         self.data_dic['BMI'] = self.data_dic['BMI'].astype(str)
         self.data_dic['obesity'] = self.data_dic['obesity'].astype(str)
+        
+        if self.data_dic['sex'].values == '1':
+            self.data_dic['sex']='여자'
+        else:
+            self.data_dic['sex']='남자'
 
 
         #7. 문장 생성
