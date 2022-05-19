@@ -49,7 +49,7 @@ class lv2_disease_diagnose:
         self.data_dic['height'] = str(height)
         self.data_dic['weight'] = str(weight)
         self.data_dic['age'] = str(age)
-        self.data_dic['sex'] = sex
+        self.data_dic['sex'] = str(sex)
         self.data_dic['cheifcomplaint'] = cheifcomplaint
         self.data_dic['onset'] = onset
         self.data_dic['location'] = location
@@ -68,7 +68,8 @@ class lv2_disease_diagnose:
         self.input_data = self.data_dic
 
         #남,녀 모델 분리
-        if self.data_dic['sex'][0]=='여자':
+        #남자 0 여자 1
+        if self.data_dic['sex'][0]=='1':
             self.lv2_model = self.w_lv2_model
             self.tfidf = self.w_tfidf
             self.lv2_dummies = self.w_lv2_dummies
