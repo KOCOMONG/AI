@@ -22,7 +22,7 @@ class lv2_disease_diagnose:
         with open(DATA_PATH + 'm_level2_estimator.pkl', 'rb') as b:
             self.m_lv2_model = pickle.load(b)
 
-        with open(DATA_PATH +'/m_level2_tfidf_vectorizer.pkl', 'rb') as c:
+        with open(DATA_PATH +'m_level2_tfidf_vectorizer.pkl', 'rb') as c:
             self.m_tfidf = pickle.load(c)
 
         with open(DATA_PATH+'m_level2_dummies.txt', 'rb') as d:
