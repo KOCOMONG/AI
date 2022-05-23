@@ -65,10 +65,12 @@ class lv2_disease_diagnose:
         #남,녀 모델 분리
         #남자 0 여자 1
         if self.data_dic['sex'][0]=='1':
+            self.data_dic['sex'][0]=='여자'
             self.lv2_model = self.w_lv2_model
             self.tfidf = self.w_tfidf
             self.lv2_dummies = self.w_lv2_dummies
         else:
+            self.data_dic['sex'][0]=='남자'
             self.lv2_model = self.m_lv2_model
             self.tfidf = self.m_tfidf
             self.lv2_dummies = self.m_lv2_dummies
