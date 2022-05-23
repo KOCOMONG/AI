@@ -104,11 +104,13 @@ class disease_diagnose:
 
         #남,녀 모델 분리
         if self.data_dic['sex'].values =='1':
+            self.data_dic['sex'][0]=='여자'
             self.model = self.w_loaded_model
             self.tokenizer = self.w_tokenizer
             self.disease_codes = self.w_disease_codes
             self.max_len=193
         else:
+            self.data_dic['sex'][0]=='남자'
             self.model = self.m_loaded_model 
             self.tokenizer = self.m_tokenizer 
             self.disease_codes = self.m_disease_codes   
