@@ -20,21 +20,24 @@ class disease_diagnose:
         __init__() : 초기화 함수
                     필요한 모델 불러오기
         '''
-        with open('./disease/men_tokenizer.pickle', 'rb') as handle:
+        DATA_PATH='C:/Users/82102/OneDrive/문서/Capstone_AI/AI/ai/질병진단/Model/'
+
+        with open(DATA_PATH+'men_tokenizer.pickle', 'rb') as handle:
             self.m_tokenizer = pickle.load(handle)
 
-        with open('./disease/women_tokenizer.pickle', 'rb') as handle:
+        with open(DATA_PATH+'women_tokenizer.pickle', 'rb') as handle:
             self.w_tokenizer = pickle.load(handle)
 
-        with open("./disease/men_diseases.txt", "rb") as fp:
+        with open(DATA_PATH+"men_diseases.txt", "rb") as fp:
             self.m_disease_codes = pickle.load(fp)
 
-        with open("./disease/women_diseases.txt", "rb") as fp:
+        with open(DATA_PATH+"women_diseases.txt", "rb") as fp:
             self.w_disease_codes = pickle.load(fp)
 
-        self.m_loaded_model = tf.saved_model.load('./model/m_model')
-        self.w_loaded_model = tf.saved_model.load('./model/w_model')
+        self.m_loaded_model = tf.saved_model.load(DATA_PATH+'m_model')
+        
 
+        self.w_loaded_model = tf.saved_model.load(DATA_PATH+'w_model')
 
 
     
@@ -52,7 +55,7 @@ class disease_diagnose:
         self.data_dic['height']= str(height)
         self.data_dic['weight'] = str(weight)
         self.data_dic['age'] = str(age)
-        self.data_dic['sex'] = sex
+        self.data_dic['sex'] = str(sex)
         self.data_dic['cheifcomplaint'] = cheifcomplaint
         self.data_dic['onset'] = onset
         self.data_dic['location'] = location
@@ -75,7 +78,7 @@ class disease_diagnose:
                 'height' : height,
                 'weight': weight,
                 'age': age,
-                'sex': sex,
+                'sex': str(sex),
                 'cheifcomplaint': cheifcomplaint,
                 'onset': onset,
                 'location': location,
