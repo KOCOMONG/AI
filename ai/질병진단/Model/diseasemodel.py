@@ -20,7 +20,6 @@ class disease_diagnose:
         __init__() : 초기화 함수
                     필요한 모델 불러오기
         '''
-        
         with open('./disease/men_tokenizer.pickle', 'rb') as handle:
             self.m_tokenizer = pickle.load(handle)
 
@@ -38,6 +37,7 @@ class disease_diagnose:
 
 
 
+    
 
     def input(self,level2,height,weight,age,sex,cheifcomplaint,onset,location,duration,course,experience,character,factor,associated,event,drug,social,family,traumatic,past,feminity):
         '''
@@ -329,7 +329,7 @@ class disease_diagnose:
         third_pred_disease_name = self.disease_codes[int(third[0])]
 
         def load_disease_list():
-            List_of_Disease = pd.read_csv('model\Disease_info.csv')
+            List_of_Disease = pd.read_csv('C:/Users/82102/OneDrive/문서/Capstone_AI/AI/ai/질병진단/DATA/Disease_info.csv')
             return List_of_Disease
 
         ## 질병 목록 ##
@@ -357,8 +357,8 @@ class disease_diagnose:
                     third_info['정의'].values[0]
         ]
         
-        #print(result1, result2, result3)
-        return result1, result2, result3
+        
+        return result1,result2,result3
 
     def run_model(self):
         '''
@@ -373,3 +373,4 @@ class disease_diagnose:
         result1,result2,result3 = self.get_result(y_prob)
 
         print(result1,result2,result3)
+
