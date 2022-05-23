@@ -100,7 +100,7 @@ class disease_diagnose:
         self.input_data = self.data_dic
 
         #남,녀 모델 분리
-        if self.data_dic['sex'].values =='여자':
+        if self.data_dic['sex'].values =='1':
             self.model = self.w_loaded_model
             self.tokenizer = self.w_tokenizer
             self.disease_codes = self.w_disease_codes
