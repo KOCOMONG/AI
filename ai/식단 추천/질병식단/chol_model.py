@@ -2,7 +2,7 @@ import pandas as pd
 import joblib
 import numpy as np
 
-class Diet:
+class choldiet:
     def __init__(self):
         '''
         __init__() : 초기화 함수
