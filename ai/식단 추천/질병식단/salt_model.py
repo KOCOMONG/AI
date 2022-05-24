@@ -2,7 +2,7 @@ import pandas as pd
 import joblib
 import numpy as np
 
-class Diet:
+class saltdiet:
     def __init__(self):
         '''
         __init__() : 초기화 함수
@@ -93,5 +93,5 @@ class Diet:
         y=self.model.predict([test.iloc[0]])
 
         self.result = self.label['음식'][np.where(self.label['label'] == y[0])[0][0]]
-        print(self.result)
+  
         
