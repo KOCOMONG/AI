@@ -10,7 +10,7 @@ class Diet:
         '''
 
         self.model = joblib.load('다이어트.pkl')
-        self.label=pd.read_csv('음식라벨인코더.csv')
+        self.label=pd.read_csv('foodlabel.csv')
        
     def input(self,height,weight,age,sex,want_weight,want_time,practice):
         '''
@@ -122,6 +122,9 @@ class Diet:
         y=self.model.predict([test.iloc[0]])
 
         #7. 결과
+        
+        self.practice_cal = p_dcal
+        self.food_cal = f_dcal
         self.result = self.label['음식'][np.where(self.label['label'] == y[0])[0][0]]
 
         
