@@ -1,5 +1,6 @@
 import pandas as pd
 import joblib
+import random
 import numpy as np
 
 class saltdiet:
@@ -92,6 +93,14 @@ class saltdiet:
         
         y=self.model.predict([test.iloc[0]])
 
-        self.result = self.label['음식'][np.where(self.label['label'] == y[0])[0][0]]
-  
+        #결과
+        self.practice_cal = p_dcal
+        self.food_cal = f_dcal
+
+        food_list = self.label['음식'][np.where(self.label['구간'] == y[0])[0]]
+        cnt = random.randint(0, len(food_list)) 
         
+        self.result = food_list.iloc[cnt]
+
+        print(self.result)
+  
