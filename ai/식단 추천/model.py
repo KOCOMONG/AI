@@ -1,5 +1,6 @@
 import pandas as pd
 import joblib
+import random
 import numpy as np
 
 class Diet:
@@ -125,6 +126,10 @@ class Diet:
         
         self.practice_cal = p_dcal
         self.food_cal = f_dcal
-        self.result = self.label['음식'][np.where(self.label['label'] == y[0])[0][0]]
+        
+        food_list = self.label['음식'][np.where(self.label['구간'] == y[0])[0]]
+        cnt = random.randint(0, len(food_list)) 
+
+        self.result = food_list.iloc[cnt]
 
         
